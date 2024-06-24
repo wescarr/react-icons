@@ -1,9 +1,7 @@
 import Icon from "@components/@core/icon";
-import loadable from "@loadable/component";
-import React from "react";
-import { getIcons } from "@utils/getIcons";
-
 import SearchPageIconLoading from "./loading";
+import loadable from "@loadable/component";
+import { getIcons } from "@utils/getIcons";
 
 export default function SearchIconSet({ icon, query, highlightPattern }) {
   const IconSet = loadable.lib(() => getIcons(icon.id));

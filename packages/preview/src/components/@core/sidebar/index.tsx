@@ -1,20 +1,20 @@
 import { ALL_ICONS } from "@utils/icon";
 import { Context } from "@utils/search-context";
 import { useRouter } from "next/router";
-import React, { useState } from "react";
+import { useContext, useState } from "react";
 
 import ActiveLink from "../active-link";
 import Heading from "../heading";
 
 const searchPath = "/search";
+const iconsList = ALL_ICONS.sort((a, b) => a.name.localeCompare(b.name));
 
 export default function Sidebar() {
-  const iconsList = ALL_ICONS.sort((a, b) => (a.name > b.name ? 1 : -1));
   const router = useRouter();
   const [isOpen, setIsOpen] = useState(false);
   const [inputQuery, setInputQuery] = useState(null);
 
-  const { query, setQuery, setResults } = React.useContext(Context);
+  const { query, setQuery, setResults } = useContext(Context);
 
   const setQueryEveywhere = (query) => {
     setQuery(query); // Context

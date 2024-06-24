@@ -1,9 +1,9 @@
-import cheerio from "cheerio";
 import camelcase from "camelcase";
-import { promises as fs } from "fs";
+import cheerio from "cheerio";
 import path from "path";
-import { type IconDefinitionContent } from "./_types";
+import { IconDefinitionContent } from "./_types";
 import { glob } from "./glob";
+import { promises as fs } from "fs";
 
 export async function getIconFiles(content: IconDefinitionContent) {
   if (typeof content.files === "string") {
@@ -26,12 +26,12 @@ export async function convertIconData(svg, multiColor) {
     attribs &&
     Object.keys(attribs)
       .filter(
-        (name) =>
+        name =>
           ![
             "class",
             ...(tagName === "svg"
               ? ["xmlns", "xmlns:xlink", "xml:space", "width", "height"]
-              : []), // if tagName is svg remove size attributes
+              : []) // if tagName is svg remove size attributes
           ].includes(name)
       )
       .reduce((obj, name) => {
@@ -56,7 +56,7 @@ export async function convertIconData(svg, multiColor) {
       }, {});
 
   // convert to [ { tag: 'path', attr: { d: 'M436 160c6.6 ...', ... }, child: { ... } } ]
-  const elementToTree = (/** @type {Cheerio} */ element) =>
+  const elementToTree = (/** @type {cheerio.Cheerio} */ element) =>
     element
       .filter((_, e) => e.tagName && !["style"].includes(e.tagName))
       .map((_, e) => ({
@@ -64,10 +64,9 @@ export async function convertIconData(svg, multiColor) {
         attr: attrConverter(e.attribs, e.tagName),
         child:
           e.children && e.children.length
-            ? elementToTree(cheerio(e.children))
-            : undefined,
-      }))
-      .get();
+            ? elementToTree(e.children)
+            : undefined
+      }));
 
   const tree = elementToTree($svg);
   return tree[0]; // like: [ { tag: 'path', attr: { d: 'M436 160c6.6 ...', ... }, child: { ... } } ]
